@@ -1,6 +1,7 @@
 FROM quay.io/redhat-github-actions/runner
 
 USER root
-RUN dnf search python3
+RUN dnf install -y python3-pip
+RUN pip install --upgrade git+https://github.com/ploigos/ploigos-step-runner.git@main
 
 USER $UID
