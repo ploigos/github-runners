@@ -1,4 +1,4 @@
-# OpenShift GitHub Actions Runner image with Python
+# Ploigos OpenShift GitHub Actions Runner Images
 
 Based on the [OpenShift Github Actions Runners](https://github.com/redhat-actions/openshift-actions-runners)
 
