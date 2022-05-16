@@ -1,0 +1,15 @@
+name: Build Containerfile
+on:
+  push:
+  pull_request_target:
+    types:
+      - opened
+      - edited
+      - synchronize
+jobs:
+  build:
+    name: Build image
+    runs-on: ubuntu-latest
+    steps:
+  - name: Clone the repository
+    uses: actions/checkout@v3
