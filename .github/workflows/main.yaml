@@ -20,7 +20,7 @@ jobs:
     steps:
       - name: Clone the Repository
         uses: actions/checkout@v3
-      - name: Build Image
+      - name: Build image
         id: build-image
         uses: redhat-actions/buildah-build@v2.9
         with:
@@ -28,11 +28,16 @@ jobs:
           tags: latest ${{ github.sha }}
           containerfiles: |
             ./Containerfile
-      - name: Log in to the container registry
+      - name: Log in to container registry
         uses: redhat-actions/podman-login@v1.3
         with:
           registry: ${{ env.REGISTRY }}
           username: ${{ secrets.REGISTRY_USERNAME }}
           password: ${{ secrets.REGISTRY_TOKEN }}
-
-    #- name: Push image to container registry
+      - name: Push to container registry
+        id: push-to-registry
+        uses: redhat-actions/push-to-registry@v2.5.1
+        with:
+          image: ${{ steps.build-image.outputs.image }}
+          tags: ${{ steps.build-image.outputs.tags }}
+          registry: ${{ env.REGISTRY }}
