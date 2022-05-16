@@ -18,21 +18,21 @@ jobs:
       IMAGE_NAME: python-runner
       REGISTRY: quay.io/aagreen
     steps:
-    - name: Clone the Repository
-      uses: actions/checkout@v3
-    - name: Build Image
-      id: build-image
-      uses: redhat-actions/buildah-build@v2.9
-      with:
-        image: ${{ env.IMAGE_NAME }}
-        tags: latest ${{ github.sha }}
-        containerfiles: |
-          ./Containerfile
-    - name: Log in to the container registry
-      uses: redhat-actions/podman-login@v1.3
-      with:
-        registry: ${{ env.REGISTRY }}
-        username: ${{ secrets.REGISTRY_USERNAME }}
-        password: ${{ secrets.REGISTRY_TOKEN }}
+      - name: Clone the Repository
+        uses: actions/checkout@v3
+      - name: Build Image
+        id: build-image
+        uses: redhat-actions/buildah-build@v2.9
+        with:
+          image: ${{ env.IMAGE_NAME }}
+          tags: latest ${{ github.sha }}
+          containerfiles: |
+            ./Containerfile
+      - name: Log in to the container registry
+        uses: redhat-actions/podman-login@v1.3
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ secrets.REGISTRY_USERNAME }}
+          password: ${{ secrets.REGISTRY_TOKEN }}
 
     #- name: Push image to container registry
