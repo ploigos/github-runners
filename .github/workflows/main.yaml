@@ -13,7 +13,7 @@ permissions:
 jobs:
   build:
     name: Build image
-      runs-on: ubuntu-latest
+    runs-on: ubuntu-latest
     steps:
     - name: Clone the repository
       uses: actions/checkout@v3
