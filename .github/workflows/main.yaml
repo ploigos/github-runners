@@ -28,3 +28,10 @@ jobs:
         tags: latest ${{ github.sha }}
         containerfiles: |
           ./Containerfile
+
+    - name: Log in to the container registry
+      uses: redhat-actions/podman-login@v1.3
+      with:
+        registry: ${{ env.REGISTRY }}
+        username: ${{ secrets.REGISTRY_USERNAME }}
+        password: ${{ secrets.REGISTRY_TOKEN }}
