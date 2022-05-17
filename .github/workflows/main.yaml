@@ -22,7 +22,7 @@ jobs:
         uses: actions/checkout@v3
       #Build job for main branch
       - name: Build image
-        if: ${{ github.ref_name }} == 'main'
+        if: ${{ github.ref_name == 'main' }}
         id: build-image-main
         uses: redhat-actions/buildah-build@v2.9
         with:
@@ -32,12 +32,12 @@ jobs:
             ./Containerfile
       #Build job for feature branches
       - name: Build image
-        if: ${{ github.ref_name }} == 'feature/*'
+        if: ${{ github.ref_name == 'feature/*' }}
         id: build-image-feature
         uses: redhat-actions/buildah-build@v2.9
         with:
           image: ${{ env.IMAGE_NAME }}
-          tags: feature-${{ github.ref_name }} ${{ github.sha }}
+          tags: feature-${{ github.ref##*/ }} ${{ github.sha }}
           containerfiles: |
             ./Containerfile
       - name: Log in to container registry
