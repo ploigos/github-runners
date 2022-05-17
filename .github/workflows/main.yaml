@@ -32,7 +32,7 @@ jobs:
             ./Containerfile
       #Build job for feature branches
       - name: Build image
-        if: github.ref_name != 'main'
+        if: startsWith(github.ref, 'refs/feature/')
         id: build-image-feature
         uses: redhat-actions/buildah-build@v2.9
         with:
