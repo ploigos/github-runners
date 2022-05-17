@@ -43,7 +43,7 @@ jobs:
         uses: redhat-actions/buildah-build@v2.9
         with:
           image: ${{ env.IMAGE_NAME }}
-          tags: feature-${{ github.ref_name }} ${{ github.sha }}
+          tags: $tag ${{ github.sha }}
           containerfiles: |
             ./Containerfile
       - name: Log in to container registry
