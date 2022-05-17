@@ -1,7 +1,4 @@
 ---
-#
-# We will need to apply DRY principles to this code to replace the duplicate steps!!!
-#
 name: Build Github Runner image for Ploigos and related tools
 on:
   push:
@@ -31,8 +28,6 @@ jobs:
               TAG="${BRANCH_NAME////-}"
               echo "TAG_NAME=$TAG" >> $GITHUB_ENV
           fi
-          echo "TAG: $TAG"
-
       - name: Build Image
         if: github.ref_name == 'main' || startsWith(github.ref, 'refs/heads/feature/')
         id: build-image
@@ -42,30 +37,12 @@ jobs:
           tags: ${{ env.TAG_NAME }} ${{ github.sha }}
           containerfiles: |
             ./Containerfile
-            
-
-#      - name: Build Feature Image
-#        if: startsWith(github.ref, 'refs/heads/feature/')
-#        id: build-image-feature
-#        uses: redhat-actions/buildah-build@v2.9
-#        with:
-#          image: ${{ env.IMAGE_NAME }}
-#          tags: ${{ env.TAG_NAME }} ${{ github.sha }}
-#          containerfiles: |
-#            ./Containerfile
       - name: Login to Container Registry
         uses: redhat-actions/podman-login@v1.3
         with:
           registry: ${{ env.REGISTRY }}
           username: ${{ secrets.REGISTRY_USERNAME }}
           password: ${{ secrets.REGISTRY_TOKEN }}
-#      - name: Push Main to Container Registry
-#        if: github.ref_name == 'main'
-#        uses: redhat-actions/push-to-registry@v2.5.1
-#        with:
-#          image: ${{ steps.build-image-main.outputs.image }}
-#          tags: ${{ steps.build-image-main.outputs.tags }}
-#          registry: ${{ env.REGISTRY }}
       - name: Push to Container Registry
         if: startsWith(github.ref, 'refs/heads/feature/')
         uses: redhat-actions/push-to-registry@v2.5.1
