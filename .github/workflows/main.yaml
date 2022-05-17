@@ -33,41 +33,43 @@ jobs:
           fi
           echo "TAG: $TAG"
 
-      - name: Build Main Image
-        if: github.ref_name == 'main'
-        id: build-image-main
-        uses: redhat-actions/buildah-build@v2.9
-        with:
-          image: ${{ env.IMAGE_NAME }}
-          tags: latest ${{ github.sha }}
-          containerfiles: |
-            ./Containerfile
-      - name: Build Feature Image
-        if: startsWith(github.ref, 'refs/heads/feature/')
-        id: build-image-feature
+      - name: Build Image
+        if: github.ref_name == 'main' || startsWith(github.ref, 'refs/heads/feature/')
+        id: build-image
         uses: redhat-actions/buildah-build@v2.9
         with:
           image: ${{ env.IMAGE_NAME }}
           tags: ${{ env.TAG_NAME }} ${{ github.sha }}
           containerfiles: |
             ./Containerfile
+            
+
+#      - name: Build Feature Image
+#        if: startsWith(github.ref, 'refs/heads/feature/')
+#        id: build-image-feature
+#        uses: redhat-actions/buildah-build@v2.9
+#        with:
+#          image: ${{ env.IMAGE_NAME }}
+#          tags: ${{ env.TAG_NAME }} ${{ github.sha }}
+#          containerfiles: |
+#            ./Containerfile
       - name: Login to Container Registry
         uses: redhat-actions/podman-login@v1.3
         with:
           registry: ${{ env.REGISTRY }}
           username: ${{ secrets.REGISTRY_USERNAME }}
           password: ${{ secrets.REGISTRY_TOKEN }}
-      - name: Push Main to Container Registry
-        if: github.ref_name == 'main'
-        uses: redhat-actions/push-to-registry@v2.5.1
-        with:
-          image: ${{ steps.build-image-main.outputs.image }}
-          tags: ${{ steps.build-image-main.outputs.tags }}
-          registry: ${{ env.REGISTRY }}
-      - name: Push Feature to Container Registry
+#      - name: Push Main to Container Registry
+#        if: github.ref_name == 'main'
+#        uses: redhat-actions/push-to-registry@v2.5.1
+#        with:
+#          image: ${{ steps.build-image-main.outputs.image }}
+#          tags: ${{ steps.build-image-main.outputs.tags }}
+#          registry: ${{ env.REGISTRY }}
+      - name: Push to Container Registry
         if: startsWith(github.ref, 'refs/heads/feature/')
         uses: redhat-actions/push-to-registry@v2.5.1
         with:
-          image: ${{ steps.build-image-feature.outputs.image }}
-          tags: ${{ steps.build-image-feature.outputs.tags }}
+          image: ${{ steps.build-image.outputs.image }}
+          tags: ${{ steps.build-image.outputs.tags }}
           registry: ${{ env.REGISTRY }}
