@@ -11,6 +11,7 @@ permissions:
   pull-requests: write
 jobs:
   build:
+    if: github.ref_name == 'main' || startsWith(github.ref, 'refs/heads/feature/')
     name: Build and Push Image to Public Container Registry
     runs-on: ubuntu-latest
     env:
@@ -29,7 +30,6 @@ jobs:
               echo "TAG_NAME=$TAG" >> $GITHUB_ENV
           fi
       - name: Build Image
-        if: github.ref_name == 'main' || startsWith(github.ref, 'refs/heads/feature/')
         id: build-image
         uses: redhat-actions/buildah-build@v2.9
         with:
