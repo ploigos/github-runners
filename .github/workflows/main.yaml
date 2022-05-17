@@ -20,6 +20,12 @@ jobs:
     steps:
       - name: Clone the Repository
         uses: actions/checkout@v3
+      #Logic to create environment variable for tag name
+      - name: Create tag name
+        run: |
+          branch=${{ github.ref_name }}
+          tag="${branch////-}"
+          echo $tag
       #Build job for main branch
       - name: Build image
         if: github.ref_name == 'main'
