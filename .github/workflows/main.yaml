@@ -1,6 +1,8 @@
 ---
+#
+# We will need to apply DRY principles to this code to replace the duplicate steps!!!
+#
 name: Build Github Runner image for Ploigos and related tools
-
 on:
   push:
   pull_request_target:
