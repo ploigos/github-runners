@@ -44,7 +44,6 @@ jobs:
           username: ${{ secrets.REGISTRY_USERNAME }}
           password: ${{ secrets.REGISTRY_TOKEN }}
       - name: Push to Container Registry
-        if: startsWith(github.ref, 'refs/heads/feature/')
         uses: redhat-actions/push-to-registry@v2.5.1
         with:
           image: ${{ steps.build-image.outputs.image }}
