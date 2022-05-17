@@ -1,6 +1,8 @@
 ---
+#
+# We will need to apply DRY principles to this code to replace the duplicate steps!!!
+#
 name: Build Github Runner image for Ploigos and related tools
-
 on:
   push:
   pull_request_target:
@@ -20,24 +22,46 @@ jobs:
     steps:
       - name: Clone the Repository
         uses: actions/checkout@v3
-      - name: Build image
-        id: build-image
+      - name: Create Tag Name
+        run: |
+          branch=${{ github.ref_name }}
+          tag="${branch////-}"
+          echo "TAG_NAME=$tag" >> $GITHUB_ENV
+      - name: Build Main Image
+        if: github.ref_name == 'main'
+        id: build-image-main
         uses: redhat-actions/buildah-build@v2.9
         with:
           image: ${{ env.IMAGE_NAME }}
           tags: latest ${{ github.sha }}
           containerfiles: |
             ./Containerfile
-      - name: Log in to container registry
+      - name: Build Feature Image
+        if: startsWith(github.ref, 'refs/heads/feature/')
+        id: build-image-feature
+        uses: redhat-actions/buildah-build@v2.9
+        with:
+          image: ${{ env.IMAGE_NAME }}
+          tags: ${{ env.TAG_NAME }} ${{ github.sha }}
+          containerfiles: |
+            ./Containerfile
+      - name: Login to Container Registry
         uses: redhat-actions/podman-login@v1.3
         with:
           registry: ${{ env.REGISTRY }}
           username: ${{ secrets.REGISTRY_USERNAME }}
           password: ${{ secrets.REGISTRY_TOKEN }}
-      - name: Push to container registry
-        id: push-to-registry
+      - name: Push Main to Container Registry
+        if: github.ref_name == 'main'
         uses: redhat-actions/push-to-registry@v2.5.1
         with:
-          image: ${{ steps.build-image.outputs.image }}
-          tags: ${{ steps.build-image.outputs.tags }}
+          image: ${{ steps.build-image-main.outputs.image }}
+          tags: ${{ steps.build-image-main.outputs.tags }}
+          registry: ${{ env.REGISTRY }}
+      - name: Push Feature to Container Registry
+        if: startsWith(github.ref, 'refs/heads/feature/')
+        uses: redhat-actions/push-to-registry@v2.5.1
+        with:
+          image: ${{ steps.build-image-feature.outputs.image }}
+          tags: ${{ steps.build-image-feature.outputs.tags }}
           registry: ${{ env.REGISTRY }}
