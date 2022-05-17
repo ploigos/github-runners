@@ -23,7 +23,7 @@ jobs:
       #Build job for main branch
       - name: Build image
         if: github.ref_name == 'main'
-        id: build-image
+        id: build-image-main
         uses: redhat-actions/buildah-build@v2.9
         with:
           image: ${{ env.IMAGE_NAME }}
@@ -33,7 +33,7 @@ jobs:
       #Build job for feature branches
       - name: Build image
         if: github.ref_name == 'feature/*'
-        id: build-image
+        id: build-image-feature
         uses: redhat-actions/buildah-build@v2.9
         with:
           image: ${{ env.IMAGE_NAME }}
