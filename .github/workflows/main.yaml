@@ -24,9 +24,15 @@ jobs:
         uses: actions/checkout@v3
       - name: Create Tag Name
         run: |
-          BRANCH_NAME=${{ github.ref_name }}
-          TAG="${BRANCH_NAME////-}"
-          echo "TAG_NAME=$TAG" >> $GITHUB_ENV
+          if ${{ github.ref_name }} == 'main'; then
+              echo "TAG_NAME=latest" >> $GITHUB_ENV
+          else
+              BRANCH_NAME=${{ github.ref_name }}
+              TAG="${BRANCH_NAME////-}"
+              echo "TAG_NAME=$TAG" >> $GITHUB_ENV
+          fi
+          echo "TAG: $TAG"
+
       - name: Build Main Image
         if: github.ref_name == 'main'
         id: build-image-main
