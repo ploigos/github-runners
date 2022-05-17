@@ -21,7 +21,7 @@ jobs:
         uses: actions/checkout@v3
       - name: Create Tag Name
         run: |
-          if ${{ github.ref_name }} == 'main'; then
+          if ${{ github.ref_name }} == main; then
               echo "TAG_NAME=latest" >> $GITHUB_ENV
           else
               BRANCH_NAME=${{ github.ref_name }}
