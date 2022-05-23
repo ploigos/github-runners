@@ -1,4 +1,4 @@
-FROM quay.io/redhat-github-actions/runner
+FROM quay.io/redhat-github-actions/buildah-runner
 
 USER root
 RUN dnf install -y python3-pip maven buildah skopeo && \
