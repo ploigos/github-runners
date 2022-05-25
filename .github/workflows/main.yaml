@@ -15,8 +15,8 @@ jobs:
     name: Build and Push Image to Public Container Registry
     runs-on: ubuntu-latest
     env:
-      IMAGE_NAME: buildah-runner
-      REGISTRY: quay.io/aagreen
+      IMAGE_NAME: github-runner
+      REGISTRY: quay.io/ploigos
     steps:
       - name: Clone the Repository
         uses: actions/checkout@v3
