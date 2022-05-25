@@ -15,8 +15,8 @@ jobs:
     name: Build and Push Image to Public Container Registry
     runs-on: ubuntu-latest
     env:
-      IMAGE_NAME: buildah-runner
-      REGISTRY: quay.io/aagreen
+      IMAGE_NAME: ploigos-github-runner
+      REGISTRY: quay.io/ploigos
     steps:
       - name: Clone the Repository
         uses: actions/checkout@v3
@@ -41,8 +41,8 @@ jobs:
         uses: redhat-actions/podman-login@v1.3
         with:
           registry: ${{ env.REGISTRY }}
-          username: ${{ secrets.REGISTRY_USERNAME }}
-          password: ${{ secrets.REGISTRY_TOKEN }}
+          username: ${{ secrets.QUAY_GITHUB_RUNNERS_USERNAME }}
+          password: ${{ secrets.QUAY_GITHUB_RUNNERS_TOKEN }}
       - name: Push to Container Registry
         uses: redhat-actions/push-to-registry@v2.5.1
         with:
