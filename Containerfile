@@ -5,7 +5,7 @@ ARG ARGOCD_VERSION=v2.0.4
 
 USER root
 RUN dnf install -y python3-pip maven skopeo
-RUN pip install --upgrade git+https://github.com/ploigos/ploigos-step-runner.git@main
+RUN pip3 install --upgrade git+https://github.com/ploigos/ploigos-step-runner.git@main
 
 # Install yq and argocd
 RUN curl -L https://github.com/mikefarah/yq/releases/download/${YQ_VERSION}/yq_linux_amd64 -o /usr/bin/yq &&\
