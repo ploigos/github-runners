@@ -1,4 +1,4 @@
-FROM quay.io/redhat-github-actions/buildah-runner
+FROM quay.io/aagreen/buildah-runner:ubi8
 
 ARG YQ_VERSION=3.4.1
 ARG ARGOCD_VERSION=v2.0.4
