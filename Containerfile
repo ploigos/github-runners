@@ -4,7 +4,9 @@ ARG YQ_VERSION=3.4.1
 ARG ARGOCD_VERSION=v2.0.4
 
 USER root
-RUN dnf install -y python3-pip maven skopeo
+RUN dnf -y module enable maven:3.6 && \
+    dnf install -y python3-pip maven skopeo && \
+    dnf -y clean all
 RUN pip3 install --upgrade git+https://github.com/ploigos/ploigos-step-runner.git@main
 
 # Install yq and argocd
