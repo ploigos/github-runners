@@ -88,7 +88,6 @@ RUN mkdir -vp /home/${USERNAME}/.config/containers && \
     printf '[storage]\ndriver = "vfs"\n' > /home/${USERNAME}/.config/containers/storage.conf && \
     chown -Rv ${USERNAME} /home/${USERNAME}/.config/
 
-
 RUN pip3 install --upgrade git+https://github.com/ploigos/ploigos-step-runner.git@main
 
 # Install yq and argocd
