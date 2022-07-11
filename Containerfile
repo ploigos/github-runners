@@ -97,3 +97,5 @@ RUN curl -L https://github.com/mikefarah/yq/releases/download/${YQ_VERSION}/yq_l
     chmod 775 /usr/bin/argocd && chown 1001:0 /usr/bin/argocd
 
 USER $UID
+
+ENTRYPOINT ./entrypoint.sh
