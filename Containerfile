@@ -42,7 +42,7 @@ RUN chmod g+w /etc/passwd && \
     touch /etc/sub{g,u}id && \
     chmod -v ug+rw /etc/sub{g,u}id
 
-RUN mkdir ${HOME}
+#RUN mkdir ${HOME}
 COPY scripts/* ${HOME}/
 
 # Set permissions so that we can allow the openshift-generated container user to access them.
