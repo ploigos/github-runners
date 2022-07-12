@@ -1,4 +1,4 @@
-FROM registry.redhat.io/ubi8:latest
+FROM registry.access.redhat.com/ubi8:latest
 
 ARG YQ_VERSION=3.4.1
 ARG ARGOCD_VERSION=v2.0.4
