@@ -1,8 +1,5 @@
 FROM registry.access.redhat.com/ubi8:latest
 
-ARG YQ_VERSION=3.4.1
-ARG ARGOCD_VERSION=v2.0.4
-
 #Steps taken from: https://github.com/redhat-actions/openshift-actions-runners/blob/main/base/Containerfile
 
 ENV UID=1000
@@ -11,9 +8,13 @@ ENV USERNAME="runner"
 
 USER root
 
-RUN dnf -y upgrade --security && \
+RUN dnf -y update && \
+    dnf -y module enable maven:3.6 python39:3.9 && \
     dnf -y --setopt=skip_missing_names_on_install=False install \
     curl git jq hostname procps findutils which openssl && \
+    dnf install -y podman buildah fuse-overlayfs shadow-utils \
+    python39 python39-pip maven skopeo --exclude container-selinux && \
+    dnf -y reinstall shadow-utils && \
     dnf clean all
 
 # Create our user and their home directory
@@ -24,16 +25,16 @@ ENV HOME /home/${USERNAME}
 WORKDIR /home/${USERNAME}
 
 # Override these when creating the container.
-ENV GITHUB_PAT="" \
-    GITHUB_APP_ID="" \
-    GITHUB_APP_INSTALL_ID="" \
-    GITHUB_APP_PEM="" \
-    GITHUB_OWNER="" \
-    GITHUB_REPOSITORY="" \
-    RUNNER_WORKDIR=/home/${USERNAME}/_work \
-    RUNNER_GROUP="" \
-    RUNNER_LABELS="" \
-    EPHEMERAL=""
+ENV GITHUB_PAT=""
+ENV GITHUB_APP_ID=""
+ENV GITHUB_APP_INSTALL_ID=""
+ENV GITHUB_APP_PEM=""
+ENV GITHUB_OWNER=""
+ENV GITHUB_REPOSITORY=""
+ENV RUNNER_WORKDIR=/home/${USERNAME}/_work
+ENV RUNNER_GROUP=""
+ENV RUNNER_LABELS=""
+ENV EPHEMERAL=""
 
 # Allow group 0 to modify these /etc/ files since on openshift, the dynamically-assigned user is always part of group 0.
 # Also see ./uid.sh for the usage of these permissions.
@@ -51,20 +52,6 @@ RUN chown -R ${USERNAME}:0 /home/${USERNAME}/ && \
     chgrp -R 0 /home/${USERNAME}/ && \
     chmod -R g=u /home/${USERNAME}/
 
-
-RUN dnf -y update && \
-    dnf -y module enable maven:3.6 python39:3.9 && \
-    dnf install -y podman \
-    buildah \
-    fuse-overlayfs \
-    shadow-utils \
-    python39 \
-    python39-pip \
-    maven \
-    skopeo \
-    --exclude container-selinux && \
-    dnf -y reinstall shadow-utils && \
-    dnf clean all
 
 #Steps taken from https://github.com/redhat-actions/openshift-actions-runners/blob/main/buildah/Containerfile
 
@@ -87,6 +74,9 @@ RUN chgrp -R 0 /etc/containers/ && \
 RUN mkdir -vp /home/${USERNAME}/.config/containers && \
     printf '[storage]\ndriver = "vfs"\n' > /home/${USERNAME}/.config/containers/storage.conf && \
     chown -Rv ${USERNAME} /home/${USERNAME}/.config/
+
+ARG YQ_VERSION=3.4.1
+ARG ARGOCD_VERSION=v2.0.4
 
 RUN pip3 install --upgrade git+https://github.com/ploigos/ploigos-step-runner.git@main
 
