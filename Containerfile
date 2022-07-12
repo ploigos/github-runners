@@ -21,8 +21,8 @@ RUN dnf -y update && \
 #RUN useradd -m $USERNAME -u $UID
 # This is to mimic the OpenShift behaviour of adding the dynamic user to group 0.
 #RUN usermod -G 0 $USERNAME
-#ENV HOME /home/${USERNAME}
-#WORKDIR /home/${USERNAME}
+ENV HOME /opt/runner
+WORKDIR ${HOME}
 
 # Override these when creating the container.
 ENV GITHUB_PAT=""
@@ -31,7 +31,7 @@ ENV GITHUB_APP_INSTALL_ID=""
 ENV GITHUB_APP_PEM=""
 ENV GITHUB_OWNER=""
 ENV GITHUB_REPOSITORY=""
-ENV RUNNER_WORKDIR=/opt/runner/
+ENV RUNNER_WORKDIR=${HOME}/_work
 ENV RUNNER_GROUP=""
 ENV RUNNER_LABELS=""
 ENV EPHEMERAL=""
@@ -42,16 +42,16 @@ RUN chmod g+w /etc/passwd && \
     touch /etc/sub{g,u}id && \
     chmod -v ug+rw /etc/sub{g,u}id
 
-RUN mkdir $RUNNER_WORKDIR
-COPY scripts/* $RUNNER_WORKDIR
+RUN mkdir ${HOME}
+COPY scripts/* ${HOME}/
 
 # Set permissions so that we can allow the openshift-generated container user to access them.
 # https://docs.openshift.com/container-platform/4.10/openshift_images/create-images.html#images-create-guide-openshift_create-images
-RUN chgrp -R 0 $RUNNER_WORKDIR && \
-    chmod -R g+rwX $RUNNER_WORKDIR
+RUN chgrp -R 0 ${HOME} && \
+    chmod -R g+rwX ${HOME}
 
-RUN $RUNNER_WORKDIR/get-runner-release.sh && \
-    $RUNNER_WORKDIR/bin/installdependencies.sh
+RUN ${HOME}/get-runner-release.sh && \
+    ${HOME}/bin/installdependencies.sh
 
 #Steps taken from https://github.com/redhat-actions/openshift-actions-runners/blob/main/buildah/Containerfile
 
