@@ -60,7 +60,7 @@ RUN curl -sSLf https://mirror.openshift.com/pub/openshift-v4/x86_64/clients/ocp/
     | tar --exclude=README.md -xzvf - &&\
     mv kubectl oc /usr/local/bin/
 
-ENV BUILDAH_ISOLATION=chroot
+ENV _BUILDAH_STARTED_IN_USERNS="" BUILDAH_ISOLATION=chroot STORAGE_DRIVER="vfs"
 ENV BUILDAH_LAYERS=true
 
 ADD https://raw.githubusercontent.com/containers/buildah/master/contrib/buildahimage/stable/containers.conf /etc/containers/
@@ -72,7 +72,7 @@ RUN chgrp -R 0 /etc/containers/ && \
 # Use VFS since fuse does not work
 # https://github.com/containers/buildah/blob/master/vendor/github.com/containers/storage/storage.conf
 #RUN mkdir -vp /home/${USERNAME}/.config/containers && \
-RUN printf '[storage]\ndriver = "vfs"\n' > /etc/containers/storage.conf
+#RUN printf '[storage]\ndriver = "vfs"\n' > /etc/containers/storage.conf
 #    chown -Rv ${USERNAME} /home/${USERNAME}/.config/
 
 ARG YQ_VERSION=3.4.1
