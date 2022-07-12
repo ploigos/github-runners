@@ -45,13 +45,13 @@ RUN chmod g+w /etc/passwd && \
 #RUN mkdir ${HOME}
 COPY scripts/* ${HOME}/
 
+RUN ${HOME}/get-runner-release.sh && \
+    ${HOME}/bin/installdependencies.sh
+
 # Set permissions so that we can allow the openshift-generated container user to access them.
 # https://docs.openshift.com/container-platform/4.10/openshift_images/create-images.html#images-create-guide-openshift_create-images
 RUN chgrp -R 0 ${HOME} && \
     chmod -R g+rwX ${HOME}
-
-RUN ${HOME}/get-runner-release.sh && \
-    ${HOME}/bin/installdependencies.sh
 
 #Steps taken from https://github.com/redhat-actions/openshift-actions-runners/blob/main/buildah/Containerfile
 
