@@ -2,9 +2,9 @@ FROM registry.access.redhat.com/ubi8:latest
 
 #Steps taken from: https://github.com/redhat-actions/openshift-actions-runners/blob/main/base/Containerfile
 
-ENV UID=1000
-ENV GID=0
-ENV USERNAME="runner"
+#ENV UID=1000
+#ENV GID=0
+#ENV USERNAME="runner"
 
 USER root
 
@@ -18,11 +18,11 @@ RUN dnf -y update && \
     dnf clean all
 
 # Create our user and their home directory
-RUN useradd -m $USERNAME -u $UID
+#RUN useradd -m $USERNAME -u $UID
 # This is to mimic the OpenShift behaviour of adding the dynamic user to group 0.
-RUN usermod -G 0 $USERNAME
-ENV HOME /home/${USERNAME}
-WORKDIR /home/${USERNAME}
+#RUN usermod -G 0 $USERNAME
+#ENV HOME /home/${USERNAME}
+#WORKDIR /home/${USERNAME}
 
 # Override these when creating the container.
 ENV GITHUB_PAT=""
@@ -31,7 +31,7 @@ ENV GITHUB_APP_INSTALL_ID=""
 ENV GITHUB_APP_PEM=""
 ENV GITHUB_OWNER=""
 ENV GITHUB_REPOSITORY=""
-ENV RUNNER_WORKDIR=/home/${USERNAME}/_work
+ENV RUNNER_WORKDIR=/opt/runner/
 ENV RUNNER_GROUP=""
 ENV RUNNER_LABELS=""
 ENV EPHEMERAL=""
@@ -42,16 +42,16 @@ RUN chmod g+w /etc/passwd && \
     touch /etc/sub{g,u}id && \
     chmod -v ug+rw /etc/sub{g,u}id
 
-COPY --chown=${USERNAME}:0 scripts/* ./
-RUN ./get-runner-release.sh &&\
-    ./bin/installdependencies.sh
+RUN mkdir $RUNNER_WORKDIR
+COPY scripts/* $RUNNER_WORKDIR
 
-# Set permissions so that we can allow the openshift-generated container user to access home.
-# https://docs.openshift.com/container-platform/3.3/creating_images/guidelines.html#openshift-container-platform-specific-guidelines
-RUN chown -R ${USERNAME}:0 /home/${USERNAME}/ && \
-    chgrp -R 0 /home/${USERNAME}/ && \
-    chmod -R g=u /home/${USERNAME}/
+# Set permissions so that we can allow the openshift-generated container user to access them.
+# https://docs.openshift.com/container-platform/4.10/openshift_images/create-images.html#images-create-guide-openshift_create-images
+RUN chgrp -R 0 $RUNNER_WORKDIR && \
+    chmod -R g+rwX $RUNNER_WORKDIR
 
+RUN $RUNNER_WORKDIR/get-runner-release.sh && \
+    $RUNNER_WORKDIR/bin/installdependencies.sh
 
 #Steps taken from https://github.com/redhat-actions/openshift-actions-runners/blob/main/buildah/Containerfile
 
@@ -71,9 +71,9 @@ RUN chgrp -R 0 /etc/containers/ && \
 
 # Use VFS since fuse does not work
 # https://github.com/containers/buildah/blob/master/vendor/github.com/containers/storage/storage.conf
-RUN mkdir -vp /home/${USERNAME}/.config/containers && \
-    printf '[storage]\ndriver = "vfs"\n' > /home/${USERNAME}/.config/containers/storage.conf && \
-    chown -Rv ${USERNAME} /home/${USERNAME}/.config/
+#RUN mkdir -vp /home/${USERNAME}/.config/containers && \
+RUN printf '[storage]\ndriver = "vfs"\n' > /etc/containers/storage.conf
+#    chown -Rv ${USERNAME} /home/${USERNAME}/.config/
 
 ARG YQ_VERSION=3.4.1
 ARG ARGOCD_VERSION=v2.0.4
@@ -84,8 +84,8 @@ RUN pip3 install --upgrade git+https://github.com/ploigos/ploigos-step-runner.gi
 RUN curl -L https://github.com/mikefarah/yq/releases/download/${YQ_VERSION}/yq_linux_amd64 -o /usr/bin/yq &&\
     chmod +x /usr/bin/yq &&\
     curl -L https://github.com/argoproj/argo-cd/releases/download/${ARGOCD_VERSION}/argocd-linux-amd64 -o /usr/bin/argocd && \
-    chmod 775 /usr/bin/argocd && chown 1001:0 /usr/bin/argocd
+    chmod 775 /usr/bin/argocd && chgrp 0 /usr/bin/argocd
 
-USER $UID
+USER 1001
 
 ENTRYPOINT ./entrypoint.sh
