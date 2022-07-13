@@ -31,8 +31,6 @@ echo "groups=$(groups 2>/dev/null)"
 
 set +x
 echo "Creating sub{u,g}id entries for $username"
-#subuids_start=$(expr $uid + 1000)
-#subgids_start=$(expr $gid + 1000)
 subuids_start="10000"
 subgids_start="10000"
 
