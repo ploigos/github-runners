@@ -9,7 +9,7 @@ set -eEu
 
 uid=$(id -u)
 gid=$(id -g)
-username=${USERNAME:-default}
+username=${USERNAME:-runner}
 
 echo "Current user has ID ${uid} and GID ${gid}"
 
