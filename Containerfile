@@ -12,6 +12,7 @@ RUN dnf -y update && \
     podman buildah fuse-overlayfs shadow-utils python39 \
     python39-pip maven skopeo openscap-scanner --exclude container-selinux && \
     dnf -y reinstall shadow-utils && \
+    dnf -y install podman-docker && \
     dnf clean all
 
 ENV HOME /opt/runner
