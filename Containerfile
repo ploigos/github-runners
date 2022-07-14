@@ -73,6 +73,8 @@ RUN curl -L https://github.com/mikefarah/yq/releases/download/${YQ_VERSION}/yq_l
     curl -L https://github.com/argoproj/argo-cd/releases/download/${ARGOCD_VERSION}/argocd-linux-amd64 -o /usr/bin/argocd && \
     chmod 775 /usr/bin/argocd && chgrp 0 /usr/bin/argocd
 
+VOLUME ${HOME}/.local/share/containers/storage
+
 USER 1001
 
 ENTRYPOINT ./entrypoint.sh
