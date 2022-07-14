@@ -77,6 +77,8 @@ RUN curl -L https://github.com/mikefarah/yq/releases/download/${YQ_VERSION}/yq_l
     tar xzf ./config-lint.tar.gz -C /usr/bin/ && rm ./config-lint.tar.gz && \
     chmod 775 /usr/bin/config-lint && chgrp 0 /usr/bin/config-lint
 
+VOLUME ${HOME}/.local/share/containers/storage
+
 USER 1001
 
 ENTRYPOINT ./entrypoint.sh
