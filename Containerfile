@@ -66,11 +66,14 @@ ARG ARGOCD_VERSION=v2.0.4
 
 RUN pip3 install --upgrade git+https://github.com/ploigos/ploigos-step-runner.git@main
 
-# Install yq and argocd
+# Install yq, argocd and config-lint
 RUN curl -L https://github.com/mikefarah/yq/releases/download/${YQ_VERSION}/yq_linux_amd64 -o /usr/bin/yq &&\
     chmod +x /usr/bin/yq &&\
     curl -L https://github.com/argoproj/argo-cd/releases/download/${ARGOCD_VERSION}/argocd-linux-amd64 -o /usr/bin/argocd && \
     chmod 775 /usr/bin/argocd && chgrp 0 /usr/bin/argocd
+    curl -L https://github.com/stelligent/config-lint/releases/latest/download/config-lint_Linux_x86_64.tar.gz --output config-lint.tar.gz && \
+    tar xzf ./config-lint.tar.gz -C /usr/bin/ && rm ./config-lint.tar.gz && \
+    chmod 775 /usr/bin/config-lint && chgrp 0 /usr/bin/config-lint
 
 USER 1001
 
