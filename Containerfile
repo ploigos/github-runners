@@ -82,6 +82,7 @@ VOLUME ${HOME}/.local/share/containers/storage
 #Set environment variable for rootless podman
 ENV PODMAN_USERNS=keep-id
 
-USER 1001
+#Try with root user
+#USER 1001
 
 ENTRYPOINT ./entrypoint.sh
