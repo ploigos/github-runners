@@ -79,6 +79,9 @@ RUN curl -L https://github.com/mikefarah/yq/releases/download/${YQ_VERSION}/yq_l
 
 VOLUME ${HOME}/.local/share/containers/storage
 
+#Set environment variable for rootless podman
+ENV PODMAN_USERNS=keep-id
+
 USER 1001
 
 ENTRYPOINT ./entrypoint.sh
