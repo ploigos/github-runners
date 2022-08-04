@@ -19,5 +19,4 @@ Actions workflow to be triggered to build and push to a new image.
 |---------------------------|--------------------------------------------------------------------------------------------------------------|
 | GitHub Runner Release API | https://api.github.com/repos/actions/runner/releases/latest                                                  |
  | OpenShift CLI             | https://mirror.openshift.com/pub/openshift-v4/x86_64/clients/ocp/${OC_VERSION}/openshift-client-linux.tar.gz |
- | Buildah Containers Conf   | https://raw.githubusercontent.com/containers/buildah/master/contrib/buildahimage/stable/containers.conf      |
 
