@@ -55,7 +55,7 @@ RUN curl -sSLf https://mirror.openshift.com/pub/openshift-v4/x86_64/clients/ocp/
 ENV _BUILDAH_STARTED_IN_USERNS="" BUILDAH_ISOLATION=chroot STORAGE_DRIVER="vfs"
 ENV BUILDAH_LAYERS=true
 
-ADD https://raw.githubusercontent.com/containers/buildah/master/contrib/buildahimage/stable/containers.conf /etc/containers/
+ADD etc/containers/containers.conf /etc/containers/
 
 RUN chgrp -R 0 /etc/containers/ && \
     chmod -R a+r /etc/containers/ && \
