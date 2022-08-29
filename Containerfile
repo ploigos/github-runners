@@ -6,7 +6,7 @@ USER root
 
 #Install necessary packages
 RUN dnf -y update && \
-    dnf -y module enable maven:3.6 python39:3.9 dotnet-sdk-6.0 && \
+    dnf -y module enable maven:3.6 python39:3.9 && \
     dnf -y --setopt=skip_missing_names_on_install=False install \
     curl git jq hostname procps findutils which openssl \
     podman buildah fuse-overlayfs shadow-utils python39 \
