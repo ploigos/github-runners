@@ -10,7 +10,7 @@ RUN dnf -y update && \
     dnf -y --setopt=skip_missing_names_on_install=False install \
     curl git jq hostname procps findutils which openssl \
     podman buildah fuse-overlayfs shadow-utils python39 \
-    python39-pip maven skopeo openscap-scanner --exclude container-selinux && \
+    python39-pip maven skopeo openscap-scanner dotnet-sdk-6.0 --exclude container-selinux && \
     dnf -y reinstall shadow-utils && \
     dnf clean all
 
