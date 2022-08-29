@@ -61,7 +61,11 @@ ADD etc/containers/containers.conf /etc/containers/
 
 RUN chgrp -R 0 /etc/containers/ && \
     chmod -R a+r /etc/containers/ && \
-    chmod -R g+w /etc/containers/
+    chmod -R g+w /etc/containers/ && \
+    touch /etc/containers/nodocker && \
+    mkdir -p /github/home /github/file_commands \
+             /github/workspace && \
+    chown -R podman:podman /github
 
 ARG YQ_VERSION=3.4.1
 ARG ARGOCD_VERSION=v2.0.4
