@@ -65,7 +65,7 @@ RUN chgrp -R 0 /etc/containers/ && \
     touch /etc/containers/nodocker && \
     mkdir -p /github/home /github/file_commands \
              /github/workspace && \
-    chown -R podman:podman /github
+    chgrp -R 0 /github
 
 ARG YQ_VERSION=3.4.1
 ARG ARGOCD_VERSION=v2.0.4
