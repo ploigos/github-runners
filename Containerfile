@@ -65,7 +65,7 @@ RUN chgrp -R 0 /etc/containers/ && \
 ARG YQ_VERSION=3.4.1
 ARG ARGOCD_VERSION=v2.0.4
 
-RUN pip3 install --upgrade git+https://github.com/ploigos/ploigos-step-runner.git@main
+RUN pip3 install --upgrade git+https://github.com/ploigos/ploigos-step-runner.git@feature/dotnet-package
 
 # Install yq, argocd and config-lint
 RUN curl -L https://github.com/mikefarah/yq/releases/download/${YQ_VERSION}/yq_linux_amd64 -o /usr/bin/yq &&\
