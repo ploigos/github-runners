@@ -32,7 +32,7 @@ jobs:
           fi
       - name: Build Image
         id: build-image
-        uses: redhat-actions/buildah-build@v2.10
+        uses: redhat-actions/buildah-build@v2.11
         with:
           image: ${{ env.IMAGE_NAME }}
           tags: ${{ env.TAG_NAME }} ${{ github.sha }}
