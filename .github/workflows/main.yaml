@@ -39,7 +39,7 @@ jobs:
           containerfiles: |
             ./Containerfile
       - name: Login to Container Registry
-        uses: redhat-actions/podman-login@v1.4
+        uses: redhat-actions/podman-login@v1.6
         with:
           registry: ${{ env.REGISTRY }}
           username: ${{ secrets.QUAY_GITHUB_RUNNERS_USERNAME }}
